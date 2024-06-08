@@ -2,9 +2,10 @@ package storage
 
 import (
 	"database/sql"
+	"fmt"
 	"projects/gobank/types"
 
-	"github.com/lib/pq"
+	_ "github.com/lib/pq"
 )
 
 type Storage interface {
@@ -59,7 +60,7 @@ func (s *PostgresStore) CreateAccount(account *types.Account) error {
     (first_name, last_name, number, balance, created_at)
     values ($1, $2, $3, $4, $5)`
 
-  _, err := s.db.Query(
+  resp, err := s.db.Query(
     query,
     account.FirstName,
     account.LastName,
@@ -71,6 +72,8 @@ func (s *PostgresStore) CreateAccount(account *types.Account) error {
   if err != nil {
     return err
   }
+
+  fmt.Printf("%+v\n", resp)
 
   return nil
 }
